@@ -7,6 +7,8 @@ async function getSoundcloud(searchTarget, artist) {
     const context = await browser.newContext();
     const page = await context.newPage();
     await page.goto('https://www.soundcloud.com');
+
+    // fuck coockies
     try {
         await page.getByRole('button', { name: 'I Accept' }).click();
     } catch (error) {
@@ -15,7 +17,23 @@ async function getSoundcloud(searchTarget, artist) {
     await page.locator('#content').getByPlaceholder('Search for artists, bands,').click();
     await page.locator('#content').getByPlaceholder('Search for artists, bands,').fill(searchTarget + " " + artist);
     await page.locator('#content').getByPlaceholder('Search for artists, bands,').press('Enter');
-    await page.getByRole('link', { name: searchTarget, exact: false }).nth(1).click();
+
+    // check first 3 links for match
+    try {
+        await page.getByRole('link', { name: searchTarget, exact: false }).nth(1).click({ timeout: 1000 });
+    } catch (error) {
+        // console.warn('firs result does not match');
+    }
+    try {
+        await page.getByRole('link', { name: searchTarget, exact: false }).nth(2).click({ timeout: 1000 });
+    } catch (error) {
+        // console.warn('second result does not match');
+    }
+    try {
+        await page.getByRole('link', { name: searchTarget, exact: false }).nth(3).click({ timeout: 1000 });
+    } catch (error) {
+        // console.warn('third result does not match');
+    }
     /** @type {string} */
     let url = page.url();
     console.log(page.url());
