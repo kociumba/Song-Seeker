@@ -2,13 +2,15 @@
   "name": "song-seeker",
   "module": "index.js",
   "type": "module",
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
   "dependencies": {
     "playwright": "^1.44.1"
+  },
+  "pkg": {
+    "scripts": "src/*.js",
+    "targets": [ "latest-linux-x64,latest-macos-x64,latest-win-x64" ],
+    "outputPath": "bin"
   }
 }

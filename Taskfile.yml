@@ -1,0 +1,8 @@
+# https://taskfile.dev
+
+version: '3'
+
+tasks:
+  package:
+    cmds:
+    - pkg -t 'node18-linux-x64,node18-macos-x64,node18-win-x64' src\index.js --no-bytecode --public-packages "*" --public

@@ -1,6 +1,7 @@
-import readline from 'readline';
-import getSoundcloud from './src/getSoundcloud.js';
-import getYoutube from './src/getYoutube.js';
+const readline = require('readline');
+const getSoundcloud = require('./handlers/getSoundcloud.js');
+const getYoutube = require('./handlers/getYoutube.js');
+const getSpotify = require('./handlers/getSpotify.js');
 
 /**
  * @type {Array.<string>}
@@ -37,8 +38,8 @@ const main = async () => {
         const artist = await askQuestion('Artist (leave empty to not specify): ');
         rl.close();
 
-        console.info(`Search Target: ${searchTarget}`);
-        console.info(`Artist: ${artist}`);
+        // console.info(`Search Target: ${searchTarget}`);
+        // console.info(`Artist: ${artist}`);
 
         // Prepare an array to hold promises for each asynchronous function call
         const promises = [];
@@ -49,6 +50,8 @@ const main = async () => {
         // Example: Call getYoutube and push its promise to the array
         // Replace 'getYoutube' with your actual function call
         promises.push(getYoutube(searchTarget, artist)); // Assuming getYoutube is defined similarly
+
+        promises.push(getSpotify(searchTarget, artist));
 
         // Example: Add more functions to execute in parallel as needed
         // promises.push(getAnotherService(searchTarget, artist));

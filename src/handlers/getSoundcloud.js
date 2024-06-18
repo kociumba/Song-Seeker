@@ -1,6 +1,6 @@
-import { chromium } from 'playwright';
+const { chromium } = require('playwright');
 
-async function getSoundcloud(searchTarget, artist) {
+module.exports =  async function getSoundcloud(searchTarget, artist) {
     const browser = await chromium.launch({
         headless: true
     });
@@ -18,21 +18,13 @@ async function getSoundcloud(searchTarget, artist) {
     await page.locator('#content').getByPlaceholder('Search for artists, bands,').fill(searchTarget + " " + artist);
     await page.locator('#content').getByPlaceholder('Search for artists, bands,').press('Enter');
 
-    // check first 3 links for match
-    try {
-        await page.getByRole('link', { name: searchTarget, exact: false }).nth(1).click({ timeout: 1000 });
-    } catch (error) {
-        // console.warn('firs result does not match');
-    }
-    try {
-        await page.getByRole('link', { name: searchTarget, exact: false }).nth(2).click({ timeout: 1000 });
-    } catch (error) {
-        // console.warn('second result does not match');
-    }
-    try {
-        await page.getByRole('link', { name: searchTarget, exact: false }).nth(3).click({ timeout: 1000 });
-    } catch (error) {
-        // console.warn('third result does not match');
+    for (let i = 1; i <= 3; i++) {
+        try {
+            await page.getByRole('link', { name: searchTarget, exact: false }).nth(i).click({ timeout: 1000 });
+            break;
+        } catch (error) {
+            // console.warn(`${i}th result does not match`);
+        }
     }
     /** @type {string} */
     let url = page.url();
@@ -45,4 +37,4 @@ async function getSoundcloud(searchTarget, artist) {
     return url
 };
 
-export default getSoundcloud;
+// export default getSoundcloud;

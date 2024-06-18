@@ -176,3 +176,6 @@ dist
 
 # misc
 *.png
+/song-seeker-linux
+/song-seeker-macos
+/song-seeker-win.exe

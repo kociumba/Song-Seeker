@@ -1,6 +1,6 @@
-import { chromium } from 'playwright';
+const { chromium } = require('playwright');
 
-async function getYoutube(searchTarget, artist) {
+module.exports = async function getYoutube(searchTarget, artist) {
     const browser = await chromium.launch({
         headless: true
     });
@@ -18,7 +18,7 @@ async function getYoutube(searchTarget, artist) {
 
     const page = await context.newPage();
     await page.goto('https://www.youtube.com/?hl=en&gl=EN');
-    await page.screenshot({ path: 'coockies bypass.png' });
+    // await page.screenshot({ path: 'coockies bypass.png' });
 
     // fuck coockies
     // try {
@@ -28,26 +28,19 @@ async function getYoutube(searchTarget, artist) {
     // } catch (error) {
     //     console.warn('Could not click I Accept button, continuing...');
     // }
-    await page.screenshot({ path: 'search.png' });
+    // await page.screenshot({ path: 'search.png' });
     await page.getByPlaceholder('Search').click();
     await page.getByPlaceholder('Search').fill(searchTarget + " " + artist);
     await page.getByPlaceholder('Search').press('Enter');
     // await page.getByText('2:36 2:36 Now playing Hardwell feat. Bright Lights - Shotgun (It Ain\'t Over)').click();
     // check first 3 links for match
-    try {
-        await page.getByRole('link', { name: searchTarget, exact: false }).nth(1).click({ timeout: 1000 });
-    } catch (error) {
-        // console.warn('firs result does not match');
-    }
-    try {
-        await page.getByRole('link', { name: searchTarget, exact: false }).nth(2).click({ timeout: 1000 });
-    } catch (error) {
-        // console.warn('second result does not match');
-    }
-    try {
-        await page.getByRole('link', { name: searchTarget, exact: false }).nth(3).click({ timeout: 1000 });
-    } catch (error) {
-        // console.warn('third result does not match');
+    for (let i = 1; i <= 3; i++) {
+        try {
+            await page.getByRole('link', { name: searchTarget, exact: false }).nth(i).click({ timeout: 1000 });
+            break;
+        } catch (error) {
+            // console.warn(`${i}th result does not match`);
+        }
     }
     /** @type {string} */
     let url = page.url();
@@ -60,4 +53,4 @@ async function getYoutube(searchTarget, artist) {
     return url
 };
 
-export default getYoutube;
+// export default getYoutube;
