@@ -16,6 +16,9 @@ const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
 });
+rl.on('close', () => {
+    rl.close();
+});
 
 /**
  * Asks a question via the command line and returns the user's response.
@@ -26,20 +29,43 @@ const askQuestion = (question) => {
     return new Promise((resolve) => rl.question(question, resolve));
 };
 
+const parseArgs = () => {
+    const args = process.argv.slice(2);
+    const params = {};
+
+    for (let i = 0; i < args.length; i++) {
+        switch (args[i]) {
+            case '-n':
+                params.name = args[i + 1];
+                i++;
+                break;
+            case '-a':
+                params.author = args[i + 1];
+                i++;
+                break;
+        }
+    }
+
+    return params;
+};
+
 const main = async () => {
     try {
-        const searchTarget = await askQuestion('Enter the search target: ');
+        const args = parseArgs();
+        let searchTarget = args.name;
+        let artist = args.author || '';
+
         if (!searchTarget) {
-            console.error('Search target cannot be empty.');
+            searchTarget = await askQuestion('Enter the search target: ');
+            if (!searchTarget) {
+                console.error('Search target cannot be empty.');
+                rl.close();
+                process.exit(1);
+            }
+
+            artist = await askQuestion('Artist (leave empty to not specify): ');
             rl.close();
-            process.exit(1);
         }
-
-        const artist = await askQuestion('Artist (leave empty to not specify): ');
-        rl.close();
-
-        // console.info(`Search Target: ${searchTarget}`);
-        // console.info(`Artist: ${artist}`);
 
         // Prepare an array to hold promises for each asynchronous function call
         const promises = [];
@@ -70,8 +96,16 @@ const main = async () => {
     }
 };
 
-main();
-
-if (foundLinks.length !== 0) {
-    console.info(foundLinks);
-}
+main()
+    .then(() => {
+        if (foundLinks.length !== 0) {
+            // console.info(foundLinks);
+            rl.close();
+            process.exit(0);
+        }
+    })
+    .catch((error) => {
+        console.error('An error occurred:', error);
+        rl.close();
+        process.exit(1);
+    });

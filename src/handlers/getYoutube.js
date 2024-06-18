@@ -1,8 +1,9 @@
 const { chromium } = require('playwright');
+const { headless } = require('./config');
 
 module.exports = async function getYoutube(searchTarget, artist) {
     const browser = await chromium.launch({
-        headless: true
+        headless: headless
     });
     const context = await browser.newContext({
         Permissions: [],
