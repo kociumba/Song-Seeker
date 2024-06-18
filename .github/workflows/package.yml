@@ -37,7 +37,7 @@ jobs:
         run: npm install -g resedit-cli
 
       - name: Modify Windows exe
-        run: resedit.exe -i song-seeker-win.exe -o song-seeker-win.exe --allow-shrink false --no-grow true --icon 'src/assets/icon.ico'
+        run: resedit -i song-seeker-win.exe -o song-seeker-win.exe --allow-shrink false --no-grow true --icon 'src/assets/icon.ico'
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
