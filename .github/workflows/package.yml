@@ -36,9 +36,9 @@ jobs:
       - name: Install wine
         run: |
           sudo apt-get update && sudo apt-get install -y wine 
-          dpkg --add-architecture i386
-          apt-get update
-          apt-get install wine32
+          sudo dpkg --add-architecture i386
+          sudo apt-get update
+          sudo apt-get install wine32
 
       - name: Download rcedit
         run: |
