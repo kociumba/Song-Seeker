@@ -20,9 +20,9 @@ jobs:
         with:
           node-version: 18
       
-      - name: Get tag name
-        id: tag
-        run: echo "name=$(node ./get-release-name.js ${{ github.run_number }})" >> $GITHUB_ENV
+    #   - name: Get tag name
+    #     id: tag
+    #     run: echo "name=$(node ./get-release-name.js ${{ github.run_number }})" >> $GITHUB_ENV
       
       - name: Install project dependencies
         run: yarn install --prefer-offline
@@ -42,7 +42,7 @@ jobs:
 
       - name: Set icon for Windows executable
         run: |
-          cp /src/assets/icon.ico icon.ico
+          cp 'src/assets/icon.ico' icon.ico
           wine rcedit-x64.exe song-seeker-win.exe --set-icon icon.ico
 
       - name: Upload artifact
