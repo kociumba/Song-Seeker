@@ -33,21 +33,11 @@ jobs:
       - name: Package application
         run: pkg -t 'node18-linux-x64,node18-macos-x64,node18-win-x64' 'src/song-seeker.js' --no-bytecode --public-packages "*" --public --compress Brotli
        
-      - name: Install wine
-        run: |
-          sudo apt-get update && sudo apt-get install -y wine 
-          sudo dpkg --add-architecture i386
-          sudo apt-get update
-          sudo apt-get install wine32
+      - name: Install resedit
+        run: npm install -g resedit-cli
 
-      - name: Download rcedit
-        run: |
-          curl -L -o rcedit-x64.exe https://github.com/electron/rcedit/releases/download/v2.0.0/rcedit-x64.exe
-
-      - name: Set icon for Windows executable
-        run: |
-          cp 'src/assets/icon.ico' icon.ico
-          wine rcedit-x64.exe song-seeker-win.exe --set-icon icon.ico
+      - name: Modify Windows exe
+        run: resedit.exe -i song-seeker-win.exe -o song-seeker-win.exe --allow-shrink false --no-grow true --icon 'src/assets/icon.ico'
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
