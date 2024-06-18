@@ -34,7 +34,11 @@ jobs:
         run: pkg -t 'node18-linux-x64,node18-macos-x64,node18-win-x64' 'src/song-seeker.js' --no-bytecode --public-packages "*" --public --compress Brotli
        
       - name: Install wine
-        run: sudo apt-get update && sudo apt-get install -y wine
+        run: |
+          sudo apt-get update && sudo apt-get install -y wine 
+          dpkg --add-architecture i386
+          apt-get update
+          apt-get install wine32
 
       - name: Download rcedit
         run: |
