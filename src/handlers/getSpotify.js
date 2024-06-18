@@ -1,7 +1,9 @@
 const { chromium } = require('playwright');
-const { headless } = require('./config');
+const { headless, timeout } = require('./config');
 
-module.exports =  async function getSpotify(searchTarget, artist) {
+let found = true
+
+module.exports = async function getSpotify(searchTarget, artist) {
     const browser = await chromium.launch({
         headless: headless
     });
@@ -14,17 +16,22 @@ module.exports =  async function getSpotify(searchTarget, artist) {
     await page.getByTestId('search-input').fill(searchTarget + " " + artist);
     for (let i = 1; i <= 3; i++) {
         try {
-            await page.getByRole('link', { name: searchTarget, exact: false }).nth(i).click({ timeout: 1000 });
+            await page.getByRole('link', { name: searchTarget, exact: false }).nth(i).click({ timeout: timeout });
             // await page.screenshot({ path: 'spotify click.png' });
             // await page.getByTestId('track-list').getByRole('link', { name: searchTarget, exact: false }).nth(i).click({ timeout: 1000 });
             break;
         } catch (error) {
             // console.warn(`${i}th result does not match`);
         }
+        found = false
     }
     /** @type {string} */
     let url = page.url();
-    console.log(page.url());
+    if (found == true) {
+        console.log(page.url());
+    } else {
+        console.log("No results found on spotify");
+    }
 
     // ---------------------
     await context.close();

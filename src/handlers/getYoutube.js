@@ -1,5 +1,7 @@
 const { chromium } = require('playwright');
-const { headless } = require('./config');
+const { headless, timeout } = require('./config');
+
+let found = true
 
 module.exports = async function getYoutube(searchTarget, artist) {
     const browser = await chromium.launch({
@@ -37,15 +39,20 @@ module.exports = async function getYoutube(searchTarget, artist) {
     // check first 3 links for match
     for (let i = 1; i <= 3; i++) {
         try {
-            await page.getByRole('link', { name: searchTarget, exact: false }).nth(i).click({ timeout: 1000 });
+            await page.getByRole('link', { name: searchTarget, exact: false }).nth(i).click({ timeout: timeout });
             break;
         } catch (error) {
             // console.warn(`${i}th result does not match`);
         }
+        found = false
     }
     /** @type {string} */
     let url = page.url();
-    console.log(page.url());
+    if (found == true) {
+        console.log(page.url());
+    } else {
+        console.log("No results found on youtube");
+    }
 
     // ---------------------
     await context.close();
