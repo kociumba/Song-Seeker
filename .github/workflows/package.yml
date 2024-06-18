@@ -1,9 +1,8 @@
 name: Package Application
 on:
   push:
-    branches:
-      - main
-
+    tags:
+      - '*'
   workflow_dispatch:
 
 jobs:
@@ -21,7 +20,7 @@ jobs:
       
       - name: Get tag name
         id: tag
-        run: echo "name=$(node ./get-release-name.js ${{ github.run_number }})" >> $GITHUB_OUTPUT
+        run: echo "name=$(node ./get-release-name.js ${{ github.run_number }})" >> $GITHUB_ENV
       
       - name: Install project dependencies
         run: yarn install --prefer-offline
@@ -37,7 +36,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.tag.outputs.name }}
+          tag_name: ${{ github.ref_name }}
           draft: false
           prerelease: false
           files: |
