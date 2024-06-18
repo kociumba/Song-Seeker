@@ -3,11 +3,23 @@ const { headless, timeout } = require('./config');
 
 let found = true
 
+/** @type {import('playwright').Browser} */
+let browser
+/** @type {import('playwright').BrowserContext} */
+let context
+
 module.exports = async function getSpotify(searchTarget, artist) {
-    const browser = await chromium.launch({
-        headless: headless
-    });
-    const context = await browser.newContext();
+    try {
+        browser = await chromium.launch({
+            headless: headless
+        });
+        context = await browser.newContext({
+            Permissions: [],
+        });
+    } catch (error) {
+        console.error("Playwright chromium could not be found, please install it with `npx install playwright` if you have node installed\nOr for more info go to https://playwright.dev/docs/intro#installing-playwright");
+        process.exit(1);
+    }
     const page = await context.newPage();
     await page.goto('https://open.spotify.com/');
     await page.getByRole('button', { name: 'Accept Cookies' }).click();

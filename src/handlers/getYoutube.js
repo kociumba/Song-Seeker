@@ -3,13 +3,23 @@ const { headless, timeout } = require('./config');
 
 let found = true
 
+/** @type {import('playwright').Browser} */
+let browser
+/** @type {import('playwright').BrowserContext} */
+let context
+
 module.exports = async function getYoutube(searchTarget, artist) {
-    const browser = await chromium.launch({
-        headless: headless
-    });
-    const context = await browser.newContext({
-        Permissions: [],
-    });
+    try {
+        browser = await chromium.launch({
+            headless: headless
+        });
+        context = await browser.newContext({
+            Permissions: [],
+        });
+    } catch (error) {
+        console.error("Playwright chromium could not be found, please install it with `npx install playwright` if you have node installed\nOr for more info go to https://playwright.dev/docs/intro#installing-playwright");
+        process.exit(1);
+    }
 
     // coockie prompt bypass for youtube
     await context.addCookies([{
