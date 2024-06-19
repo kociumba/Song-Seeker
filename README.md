@@ -15,7 +15,7 @@ can be downloaded from [releases](https://github.com/kociumba/Song-Seeker/releas
 > Unfortunatly I can't package the playwright version of chromium with the app so you will still have to install playwright with 
 >
 > ```
-> npx install playwright
+> npx playwright install --with-deps chromium
 > ```
 >
 > or any other way mentioned [on the playwright docs](https://playwright.dev/docs/intro#installing-playwright)
