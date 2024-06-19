@@ -1,6 +1,6 @@
 # Song-Seeker
 
-A small app to get direct links for songs from various platforms from just the title 😎.
+A small app to get direct links for songs from various platforms from just the title 😎
 
 ## Installation
 
